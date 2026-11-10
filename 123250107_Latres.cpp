@@ -55,38 +55,31 @@ nodeTree* cari_tree(nodeTree* akar, int nota) {
 // harus menangani 3 kasus: tanpa anak, satu anak, dan dua anak.
 // mengembalikan akar tree setelah penghapusan.
 nodeTree* hapus_tree(nodeTree* akar, int nota) {
-    // data ngga ketemu
-    if (akar == nullptr) {
-        return nullptr;
+    if (akar == NULL) {
+        return NULL;
     }
-
-    // 3 pengkondisian
     if (nota < akar->nota) {
         akar->kiri = hapus_tree(akar->kiri, nota);
     } else if (nota > akar->nota) {
         akar->kanan = hapus_tree(akar->kanan, nota);
+    } else if (akar->kiri == NULL) {
+        nodeTree* sisa = akar->kanan;
+        delete akar;
+        return sisa;
+    } else if (akar->kanan == NULL) {
+        nodeTree* sisa = akar->kiri;
+        delete akar;
+        return sisa;
     } else {
-        if (akar->kiri == nullptr) {
-            nodeTree* target = akar;
-            akar = akar->kanan;
-            delete target;
-            return target;
-        } else if (akar->kanan == nullptr) {
-            nodeTree* target = akar;
-            akar = akar->kiri;
-            delete target;
-            return target;
-        } else {
-            nodeTree* pengganti = akar->kanan;
-            while (pengganti->kiri != nullptr) {
-                pengganti = pengganti->kiri;    
-            }
-            akar->nota = pengganti->nota;
-            akar->nama = pengganti->nama;
-            akar->kanan = hapus_tree(akar->kanan, pengganti->nota);
+        nodeTree* pengganti = akar->kanan;
+        while (pengganti->kiri != NULL) {
+            pengganti = pengganti->kiri;
         }
-        return akar;
+        akar->nota = pengganti->nota;
+        akar->nama = pengganti->nama;
+        akar->kanan = hapus_tree(akar->kanan, pengganti->nota);
     }
+    return akar;
 }
 
 // menampilkan isi tree dengan urutan: node, kiri, kanan.
@@ -224,8 +217,8 @@ void proses_cucian() {
 // menampilkan seluruh cucian di stack dari atas sampai bawah.
 // error handling jika stack kosong.
 void lihat_riwayat() {
-    if (front == nullptr) {
-        cout << "Antrean cucian masih kosong!" << endl << endl;
+    if (top == nullptr) {
+        cout << "Riwayat cucian masih kosong!" << endl << endl;
         return;
     }
 
@@ -335,7 +328,7 @@ void ambil_cucian() {
         cout << "Cucian dengan nota " << nota << " tidak ada di rak.\n\n";
         return; 
     }
-    cout << "Cucian " << hasil->nama << " telah diambil." << endl << endl;
+    cout << "Cucian " << hasil->nama << " telah diambil pelanggan." << endl << endl;
     root = hapus_tree(root, nota);
 }
 
